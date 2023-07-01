@@ -1,7 +1,18 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const loginUser = (req,res)=>{
+const loginUser = async(req,res)=>{
+    console.log(req.user)
+    const {email,password} = req.body
+    const existingUser = await User.findOne({email: email}).exec()
+    if(!existingUser) return res.status(400).json({success:false,message:"please register before login"})
+    let correctPassword = await bcrypt.compare(password, existingUser.password)
+    if(!correctPassword) return res.status(400).json({success:false,message:"wrong credentials"})
+    const token = jwt.sign({existingUser},process.env.secret)
+    existingUser.password = null
+    return res.status(200).json({success:true,data:existingUser,token:token})
+    
     
 }
 const registerUser = async(req,res)=>{
@@ -13,10 +24,10 @@ try {
     let hashPassword = await bcrypt.hash(password,10)
     let user = await User.create({firstName,lastName,email,password:hashPassword,role})
     user.password = null
-    res.status(201).json({success:true, data:user})
+   return res.status(201).json({success:true, data:user})
 } catch (error) {
     console.log(error)
-    res.status(500).json({success:false, message:"error in registerUser "})
+    return res.status(500).json({success:false, message:"error in registerUser "})
     
 }
 
