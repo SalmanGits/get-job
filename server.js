@@ -1,19 +1,19 @@
 require("dotenv").config()
 const express = require('express')
-const A = require('./models/JobSeeker.js')
 const app = express()
 const connectToDB = require('./db/db.js')
 app.use(express.json())
 const port = process.env.PORT || 3000 
+const userRoute = require('./routes/UserRoute.js')
 //Db Connection
 connectToDB()
+
 //----------
 
 app.get("/",(req,res)=>{
-   A.create({name:"salamn"}).then(()=>{
-    console.log("saved")
-   })
+  res.json({success:true})
 })
+app.use('/api',userRoute)
 
 // Server Listening
 app.listen(port,()=>{
