@@ -1,9 +1,9 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const UserProfile = require('../models/UserProfile');
 
 const loginUser = async(req,res)=>{
-    console.log(req.user)
     const {email,password} = req.body
     const existingUser = await User.findOne({email: email}).exec()
     if(!existingUser) return res.status(400).json({success:false,message:"please register before login"})
@@ -19,7 +19,6 @@ const registerUser = async(req,res)=>{
 try {
     const {firstName,lastName,email,password,role} = req.body
     let existedUser = await User.findOne({email:email}).exec()
-    console.log(existedUser)
     if(existedUser) return res.status(400).json({success:false, message:"user already exist"})
     let hashPassword = await bcrypt.hash(password,10)
     let user = await User.create({firstName,lastName,email,password:hashPassword,role})
@@ -32,4 +31,28 @@ try {
 }
 
 }
-module.exports = {loginUser,registerUser}
+const addUserInfo = async(req,res) => {
+    try {
+        const userProfile = await UserProfile.create(req.body)
+        return res.status(201).json({success:true, data:userProfile})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({success:false, message:"error in addUserInfo"})
+        
+    }
+}
+const getUserInfo = async(req,res) => {
+    try {
+       const id = req.user._id
+       console.log(id)
+        const userProfile = await UserProfile.findOne({user:id}).exec()
+        return res.status(201).json({success:true, data:userProfile})
+    
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({success:false, message:"error in addUserInfo"})
+        
+    }
+}
+module.exports = {loginUser,registerUser,addUserInfo,getUserInfo}
