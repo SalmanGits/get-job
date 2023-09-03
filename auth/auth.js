@@ -10,7 +10,6 @@ function Auth(req, res, next) {
             })
         }
         const decode = jwt.verify(token, SECRET_KEY);
-   
         req.user = decode.existingUser
         req.user.password = null
         next()

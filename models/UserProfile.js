@@ -31,7 +31,11 @@ const userProfileSchema = new mongoose.Schema({
     linkedin: String,
     twitter: String,
     github: String
-  }
+  },
+  appliedJobs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Job'
+  }],
 });
 
 const UserProfile = mongoose.model('UserProfile', userProfileSchema);
