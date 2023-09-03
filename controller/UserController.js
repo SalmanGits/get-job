@@ -2,6 +2,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserProfile = require('../models/UserProfile');
+const { default: mongoose } = require('mongoose');
 
 const loginUser = async(req,res)=>{
     const {email,password} = req.body
@@ -33,19 +34,20 @@ try {
 }
 const addUserInfo = async(req,res) => {
     try {
-        const userProfile = await UserProfile.create(req.body)
+        const {model}=req.body
+        const Model = mongoose.model(model)
+        const userProfile = await Model.create(req.body)
         return res.status(201).json({success:true, data:userProfile})
         
     } catch (error) {
         console.log(error)
-        res.status(500).json({success:false, message:"error in addUserInfo"})
+        res.status(500).json({success:false, message:"error in adding"})
         
     }
 }
 const getUserInfo = async(req,res) => {
     try {
        const id = req.user._id
-       console.log(id)
         const userProfile = await UserProfile.findOne({user:id}).exec()
         return res.status(201).json({success:true, data:userProfile})
     
