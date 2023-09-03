@@ -10,6 +10,11 @@ const jobSchema = new mongoose.Schema({
     ref: 'Recruiter',
     required: true
   },
+  appliedUsers:{
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'UserProfile',
+   
+  },
   description: {
     type: String,
     required: true

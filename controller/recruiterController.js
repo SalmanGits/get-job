@@ -52,6 +52,8 @@ const jobListing = async (req, res) => {
         //         model: "User"
         //     }
         // });
+
+
         let jobs  = await Job.find()
         let recruiter = await recruiterProfile.find({user:jobs[0].recruiter})
         let user = await User.find({_id:recruiter[0].user})

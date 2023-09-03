@@ -32,10 +32,10 @@ const userProfileSchema = new mongoose.Schema({
     twitter: String,
     github: String
   },
-  appliedJobs: [{
-    type: mongoose.Schema.Types.ObjectId,
+  appliedJobs: {
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'Job'
-  }],
+  },
 });
 
 const UserProfile = mongoose.model('UserProfile', userProfileSchema);

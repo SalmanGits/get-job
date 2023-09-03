@@ -4,6 +4,7 @@ const app = express()
 const cors = require('cors')
 const recruiterRoute = require('./routes/recruiterRoute')
 const connectToDB = require('./db/db.js')
+const jobRoute = require('./routes/jobRoute')
 app.use(express.json())
 const port = process.env.PORT || 3000 
 const userRoute = require('./routes/UserRoute.js')
@@ -20,6 +21,7 @@ app.get("/",(req,res)=>{
 })
 app.use('/api',userRoute)
 app.use("/api",recruiterRoute)
+app.use("/api",jobRoute)
 
 // Server Listening
 app.listen(port,()=>{
